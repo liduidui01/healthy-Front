@@ -11,14 +11,14 @@
 // 弹窗标题
 .dialog-title {
     font-size: 16px;
-    padding: 25px 20px;
+    padding: 15px 20px;
     user-select: none;
     color: rgb(107, 106, 106);
 }
 
 .dialog-avatar {
-    width: 98px;
-    height: 98px;
+    width: 78px;
+    height: 78px;
 }
 
 .dialog-input {
@@ -26,14 +26,23 @@
     font-weight: 600;
     width: 100%;
     border: 5px;
-    padding: 4px 5px;
+    padding: 8px 6px;
+    box-sizing: border-box;
+    border-radius: 5px;
     border: none;
     outline: none;
     user-select: none;
+    background-color: rgb(248, 248, 248);
 }
-.dialog-hover{
+
+.dialog-hover {
     display: inline-block;
     padding: 10px 6px;
     font-size: 12px;
     color: rgb(107, 106, 106);
+}
+
+
+.el-dialog {
+    border-radius: 8px !important;
 }

@@ -2,7 +2,7 @@
     <div class="menu-container">
         <div class="menu-side" :class="{ 'menu-side-narrow': flag }">
             <div style="display: flex;align-items: center;">
-                <Logo style="padding: 0 40px;margin: 10px 0;" :flag="flag" :bag="colorLogo" />
+                <Logo style="padding: 0 40px;margin: 10px 0;" sysName="健康有道" :flag="flag" :bag="colorLogo" />
             </div>
             <div style="margin-top: 12px;">
                 <AdminMenu :flag="flag" :routes="adminRoutes" :bag="bagMenu" @select="handleRouteSelect" />
@@ -82,9 +82,9 @@ export default {
             },
             flag: false,
             tag: '可视化',
-            bag: 'rgb(255 255 255)',
-            colorLogo: 'rgb(56, 183, 129)',
-            bagMenu: 'rgb(255 255 255)',
+            bag: 'rgb(246,246,246)',
+            colorLogo: 'rgb(51,51,51)',
+            bagMenu: 'rgb(248,248,248)',
             dialogOperaion: false
         };
     },
@@ -146,7 +146,7 @@ export default {
                 this.loginOut();
             }
         },
-        async loginOut(){
+        async loginOut() {
             const confirmed = await this.$swalConfirm({
                 title: '退出登录？',
                 text: `推出后需重新登录？`,
@@ -160,10 +160,10 @@ export default {
                     showConfirmButton: false,
                     timer: 1000,
                 });
-                setTimeout(()=>{
+                setTimeout(() => {
                     clearToken();
                     this.$router.push("/login");
-                },1000)
+                }, 1000)
             }
         },
         menuOperationHistory() {
@@ -203,7 +203,7 @@ export default {
                 }
             } catch (error) {
                 console.error('获取用户认证信息时发生错误:', error);
-                this.$message.error('认证信息加载失败，请重试！');
+                this.$message.error('认证信息加载失败,请重试！');
             }
         },
     }
@@ -223,7 +223,7 @@ export default {
         padding-top: 10px;
         box-sizing: border-box;
         transition: width 0.3s ease;
-        background-color: rgb(255 255 255);
+        background-color: rgb(248,248,248);
         border-right: 1px solid rgb(240, 240, 240);
     }
 
@@ -234,6 +234,7 @@ export default {
     .main {
         flex-grow: 1;
         overflow-x: hidden;
+
         .header-section {
             max-width: 100%;
             padding: 0 15px;

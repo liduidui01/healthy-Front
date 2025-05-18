@@ -1,66 +1,50 @@
 <template>
-    <div>
-        <ul class="nav">
-            <li>
-                <Logo />
-            </li>
-            <li v-if="!item.isHidden" :style="{
-                fontSize: selectedIndex === index ? '18px' : '14px',
-                color: selectedIndex === index ? '#1c1c1c' : 'rgb(102 102 102)'
-            }" class="funItem" v-for="(item, index) in menus" :key="index" @click="menuClick(`${item.path}`, index)">
-                <span>
-                    <i :class="item.icon"></i>
-                    <span>&nbsp; {{ item.name }}</span>
+    <div class="nav">
+        <Logo sysName="健康有道" />
+        <div v-if="!item.isHidden" :style="{
+            color: selectedIndex === index ? '#1c1c1c' : 'rgb(102 102 102)'
+        }" class="menu-item" v-for="(item, index) in menus" :key="index" @click="menuClick(`${item.path}`, index)">
+            <span>
+                <i :class="item.icon"></i>
+                <span>&nbsp; {{ item.name }}</span>
+            </span>
+        </div>
+        <div class="search">
+            <input placeholder="搜索资讯" @keyup.enter="search" v-model="filterText" />
+            <span @click="search">立即搜索</span>
+        </div>
+        <div class="record">
+            <span @click="healthDataRecord" style="margin:14px 10px;">
+                <i class="el-icon-connection"></i>
+                健康记录
+            </span>
+        </div>
+        <div class="messsage">
+            <el-badge v-if="noReadMsg !== 0" :value="noReadMsg">
+                <span class="message-span" @click="messageCenter">
+                    <i class="el-icon-chat-dot-round"></i>
                 </span>
-            </li>
-            <li>
-                <el-row>
-                    <el-col :span="18">
-                        <input class="search-input" placeholder="搜索..." @keyup.enter="search" v-model="filterText" />
-                    </el-col>
-                    <el-col :span="6">
-                        <span @click="search"
-                            style="background-color: #000;color: #f1f1f1;border-radius: 5px;padding: 5px 10px;width: 100%;box-sizing: border-box;">
-                            搜索
-                        </span>
-                    </el-col>
-                </el-row>
-            </li>
-            <li style="position: absolute;right: 380px;">
-                <span @click="healthDataRecord" style="margin:14px 10px;">
-                    <i class="el-icon-edit-outline"></i>
-                    指标记录
+            </el-badge>
+            <span v-else class="message-span" @click="messageCenter">
+                <i class="el-icon-chat-dot-round"></i>
+            </span>
+        </div>
+        <div>
+            <el-dropdown class="user-dropdown">
+                <span class="el-dropdown-link" style="display: flex; align-items: center;">
+                    <el-avatar :size="25" :src="userInfo.url" style="margin-top: 0;"></el-avatar>
+                    <span class="userName"
+                        style="margin-left: 5px;font-size: 14px;width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{
+                            userInfo.name }}</span>
+                    <i class="el-icon-arrow-down el-icon--right" style="margin-left: 5px;"></i>
                 </span>
-            </li>
-            <li style="position: absolute;right: 350px;">
-                <el-badge style="margin-left: 5px;font-size: 16px;" v-if="noReadMsg !== 0" :value="noReadMsg">
-                    <span class="message-span" @click="messageCenter">
-                        <i class="el-icon-bell"></i>
-                    </span>
-                </el-badge>
-                <span style="margin-left: 5px;font-size: 16px;" v-else class="message-span" @click="messageCenter">
-                    <i class="el-icon-bell"></i>
-                </span>
-            </li>
-            <li>
-                <span class="user-block">
-                    <el-dropdown class="user-dropdown">
-                        <span class="el-dropdown-link" style="display: flex; align-items: center;">
-                            <el-avatar :size="35" :src="userInfo.url" style="margin-top: 0;"></el-avatar>
-                            <span class="userName" style="margin-left: 5px;font-size: 16px;">{{ userInfo.name }}</span>
-                            <i class="el-icon-arrow-down el-icon--right" style="margin-left: 5px;"></i>
-                        </span>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item icon="el-icon-user"
-                                @click.native="userCenterPanel">个人中心</el-dropdown-item>
-                            <el-dropdown-item icon="el-icon-warning-outline"
-                                @click.native="resetPwd">修改密码</el-dropdown-item>
-                            <el-dropdown-item icon="el-icon-back" @click.native="loginOut">退出登录</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </span>
-            </li>
-        </ul>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item icon="el-icon-user" @click.native="userCenterPanel">个人中心</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-warning-outline" @click.native="resetPwd">修改密码</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-back" @click.native="loginOut">退出登录</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+        </div>
     </div>
 </template>
 <script>
@@ -140,7 +124,7 @@ export default {
             const messageQueryDto = { userId: userInfoEntity.id, isRead: false }
             const response = await this.$axios.post(`/message/query`, messageQueryDto);
             const { data } = response;
-            if(data.code === 200){
+            if (data.code === 200) {
                 this.noReadMsg = data.data.length;
             }
         },
@@ -188,132 +172,77 @@ export default {
 </script>
 <style scoped lang="scss">
 .nav {
-    padding: 12px 160px;
-    height: 70px;
-    line-height: 70px;
-    list-style: none;
-    border-bottom: 1px solid #f1f1f1;
-    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    height: 80px;
 
-    li {
-        float: left;
-        height: 70px;
-        line-height: 70px;
-        font-weight: 400;
-        padding: 0 20px;
-        user-select: none;
-        color: rgb(102, 102, 102);
-        font-size: 14px;
-        transition: all 0.5s;
-
-        i {
-            color: rgb(102, 102, 102);
-        }
-
-        .message-span {
-            padding: 5px;
-            border-radius: 5px;
-
-            i {
-                font-size: 16px;
-            }
-        }
-
-        .message-span:hover {
-            background-color: rgb(240, 240, 240);
-        }
-
-        .search-input {
-            outline: none;
-            width: 100%;
-            font-size: 14px;
-            height: 35px;
-            line-height: 35px;
-            font-size: 16px;
-            padding: 2px 30px;
-            border-radius: 5px;
-            transition: all 0.5s;
-            border: 1px solid rgb(76, 77, 11);
-            border-radius: 5px;
-        }
-
-        .search-button {
-            background-color: #000;
-            font-size: 16px;
-            cursor: pointer;
-            height: 30px;
-            line-height: 30px;
-        }
-
-        .serch-input:focus {
-            border: 1px solid rgb(188, 229, 247);
-        }
-
-    }
-}
-
-.user-block {
-    position: absolute;
-    right: 200px;
-
-    .userName {
-        display: inline-block;
-        vertical-align: middle;
+    .menu-item {
         font-size: 14px;
         cursor: pointer;
-        user-select: none;
     }
-}
-
-.info-block {
-    position: fixed;
-    right: 10px;
-    float: right;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
 
     .search {
+        border-radius: 15px;
+        font-size: 14px;
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        flex-wrap: wrap;
 
-        span {
+        input {
+            outline: none;
+            border: none;
+            border-left: 1px solid rgb(51, 51, 51);
+            border-top: 1px solid rgb(51, 51, 51);
+            border-bottom: 1px solid rgb(51, 51, 51);
+            padding: 6px 10px;
             font-size: 12px;
-            padding: 0 8px;
         }
 
+        input:focus {
+            color: rgb(31, 31, 31);
+        }
+
+        span:hover {
+            background-color: rgb(31, 31, 31);
+        }
+
+        span {
+            background-color: rgb(51, 51, 51);
+            display: inline-block;
+            cursor: pointer;
+            font-size: 12px;
+            color: rgb(245, 245, 245);
+            padding: 6px 10px;
+            border-top-right-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
     }
 
-    i {
-        padding: 6px;
-        border-radius: 3px;
-        font-size: 20px;
+    .record:hover {
+        background-color: rgb(40, 150, 103);
     }
 
-    i:hover {
-        background-color: rgb(230, 230, 230);
+    .messsage:hover{
+        background-color: rgb(40, 150, 103);
     }
 
-    .user-name {
-        padding: 0 10px;
-        color: #252933;
-        font-weight: 400;
-        margin: 0 10px;
+    .messsage{
+        background-color: rgb(56, 183, 129);
+        cursor: pointer;
+        padding: 2px 14px;
+        border-radius: 10px;
+        color: rgb(255,255,255);
+    }
+
+    .record {
         font-size: 14px;
-    }
-
-    .login-out {
-        margin: 0 20px;
-        width: 20px;
-        height: 20px;
-        padding: 6px;
-        background-color: none !important;
-        border-radius: 3px;
-    }
-
-    .login-out:hover {
-        background-color: rgb(230, 230, 230);
+        cursor: pointer;
+        background-color: rgb(56, 183, 129);
+        color: rgb(255, 255, 255);
+        padding: 4px 10px;
+        border-radius: 15px;
     }
 }
 </style>

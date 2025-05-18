@@ -35,7 +35,8 @@
                             style="margin-left: 20px;background-color: rgb(43, 121, 203);border: none;" type="primary"
                             @click="searModel">搜索</el-button>
                     </div>
-                    <div style="padding: 10px 0;margin-right: 40px;">
+                    <div
+                        style="padding: 10px 6px;margin-right: 40px;height: 500px;overflow-y: scroll;overflow-x: hidden;">
                         <div @click="modelSelected(model)" class="item-model" v-for="(model, index) in modelList"
                             :key="index">
                             <el-tooltip class="item" effect="dark" :content="'该项配置【' + model.name + '】，点击即可选中'"
@@ -50,9 +51,9 @@
                                             <div style="font-size: 14px;margin-top: 5px;">
                                                 <span>{{ model.unit }}</span>
                                                 <span style="margin-left: 10px;">{{ model.symbol }}</span>
-                                                <span @click="updateModel(model)" v-if="model.userId !== null"
+                                                <span @click="updateModel(model)" v-if="!model.isGlobal"
                                                     style="margin-left: 10px;color: #333;">修改</span>
-                                                <span @click="deleteModel(model)" v-if="model.userId !== null"
+                                                <span @click="deleteModel(model)" v-if="!model.isGlobal"
                                                     style="margin-left: 10px;color: red;">删除</span>
                                             </div>
                                         </div>
@@ -69,16 +70,22 @@
                             <span @click="clearData" style="font-size: 14px;margin-left: 20px;">重置</span>
                         </div>
                         <el-row>
-                            <el-col :span="12" v-for="(model, index) in selectedModel" :key="index">
-                                <h3>{{ model.name }}({{ model.unit }})</h3>
-                                <input type="text" v-model="model.value" class="input-model"
-                                    :placeholder="'正常值范围：' + model.valueRange">
-                            </el-col>
+                            <el-row v-if="selectedModel.length === 0">
+                                <el-empty description="快选中模型记录吧"></el-empty>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12" v-for="(model, index) in selectedModel" :key="index">
+                                    <h3>{{ model.name }}({{ model.unit }})</h3>
+                                    <input type="text" v-model="model.value" class="input-model"
+                                        :placeholder="'正常值范围：' + model.valueRange">
+                                </el-col>
+                            </el-row>
                         </el-row>
+
                     </div>
                     <div style="padding: 50px 150px;">
                         <span @click="toRecord"
-                            style="cursor: pointer;;padding: 10px 20px;background-color: #000;border-radius: 5px;color: #fff;">
+                            style="cursor: pointer;padding: 10px 20px;background-color: #000;border-radius: 5px;color: #fff;">
                             立即记录
                             <i class="el-icon-right"></i>
                         </span>
@@ -88,57 +95,54 @@
         </div>
         <el-dialog :show-close="false" :visible.sync="dialogUserOperaion" width="26%">
             <div slot="title">
-                <p class="dialog-title">{{ !isOperation ? '新增新健康模型' : '编辑健康模型信息' }}</p>
+                <p class="dialog-title">{{ !isOperation ? '健康模型新增' : '健康模型修改' }}</p>
             </div>
             <div style="padding:0 20px;">
+                <p>*图标</p>
                 <!-- 图标 -->
-                <el-row style="margin-top: 20px;">
+                <el-row style="margin-top: 10px;">
                     <el-upload class="avatar-uploader" action="/api/personal-heath/v1.0/file/upload"
                         :show-file-list="false" :on-success="handleAvatarSuccess">
-                        <img v-if="data.cover" :src="data.cover" style="height: 44px;width: 44px;">
+                        <img v-if="data.cover" :src="data.cover" style="height: 64px;width: 64px;">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
                 </el-row>
                 <!-- 配置名 -->
-                <el-row style="padding: 0 20px 0 0;">
+                <el-row style="padding: 0 10px 0 0;">
                     <p>
                         <span class="modelName">*配置名</span>
                     </p>
-                    <input class="input-title" v-model="data.name"
-                        style="border-radius: 5px;background-color: #f1f1f1;">
+                    <input class="input-title" v-model="data.name" placeholder="请输入">
                 </el-row>
                 <!-- 单位 -->
-                <el-row style="padding: 0 20px 0 0;">
+                <el-row style="padding: 0 10px 0 0;">
                     <p style="font-size: 12px;padding: 3px 0;">
                         <span class="modelName">*单位</span>
                     </p>
-                    <input class="input-title" v-model="data.unit"
-                        style="border-radius: 5px;background-color: #f1f1f1;">
+                    <input class="input-title" v-model="data.unit" placeholder="请输入">
                 </el-row>
                 <!-- 符号 -->
-                <el-row style="padding: 0 20px 0 0;">
+                <el-row style="padding: 0 10px 0 0;">
                     <p style="font-size: 12px;padding: 3px 0;">
                         <span class="modelName">*符号</span>
                     </p>
-                    <input class="input-title" v-model="data.symbol"
-                        style="border-radius: 5px;background-color: #f1f1f1;">
+                    <input class="input-title" v-model="data.symbol" placeholder="请输入">
+                </el-row>
+                <!-- 正常值 -->
+                <el-row style="padding: 0 20px 0 0;">
+                    <p style="font-size: 12px;padding: 3px 0;">
+                        <span class="modelName">*阈值（格式：最小值,最大值）</span>
+                    </p>
+                    <input class="input-title" v-model="data.valueRange" placeholder="请输入">
                 </el-row>
                 <!-- 简介 -->
-                <el-row style="padding: 0 20px 0 0;">
+                <el-row style="padding: 0 10px 0 0;">
                     <p style="font-size: 12px;padding: 3px 0;">
                         <span class="modelName">*简介</span>
                     </p>
-                    <el-input style="border-radius: 5px;background-color: #f1f1f1;" type="textarea"
-                        :autosize="{ minRows: 2, maxRows: 3 }" placeholder="简介" v-model="data.detail">
+                    <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 3 }" placeholder="简介"
+                        v-model="data.detail">
                     </el-input>
-                </el-row>
-                <!-- 简介 -->
-                <el-row style="padding: 0 20px 0 0;">
-                    <p style="font-size: 12px;padding: 3px 0;">
-                        <span class="modelName">*正常值范围</span>
-                    </p>
-                    <el-slider v-model="valuesRange" range show-stops :max="1000">
-                    </el-slider>
                 </el-row>
             </div>
             <span slot="footer" class="dialog-footer">
@@ -147,7 +151,7 @@
                 <el-button size="small" v-else style="background-color: rgb(43, 121, 203);border: none;"
                     class="customer" type="info" @click="updateOperation">修改</el-button>
                 <el-button class="customer" size="small" style="background-color: rgb(241, 241, 241);border: none;"
-                    @click="dialogUserOperaion = false">取消</el-button>
+                    @click="cannel()">取消</el-button>
             </span>
         </el-dialog>
     </div>
@@ -162,11 +166,10 @@ export default {
             userInfo: {},
             modelList: [],
             activeName: 'first',
-            userHealthModel: { userId: null },
+            userHealthModel: { isGlobal: true },
             dialogUserOperaion: false,
             isOperation: false,
             userId: null,
-            valuesRange: [10, 50],
             selectedModel: [],
         };
     },
@@ -176,19 +179,24 @@ export default {
         this.getUser();
     },
     methods: {
-        async clearData(){
+        async clearData() {
             const confirmed = await this.$swalConfirm({
                 title: "重置数据？",
                 text: `重置之后需要重新输入,是否继续`,
                 icon: 'warning',
             });
-            if(confirmed){
+            if (confirmed) {
                 this.selectedModel = [];
             }
         },
+        cannel(){
+            this.data = {};
+            this.dialogUserOperaion = false;
+            this.isOperation = false;
+            this.cover = '';
+        },
         // 发送修改请求
         updateOperation() {
-            this.data.valueRange = this.valuesRange.join(",");
             this.$axios.put('/health-model-config/update', this.data).then(response => {
                 const { data } = response;
                 if (data.code === 200) {
@@ -210,7 +218,6 @@ export default {
         // 修改自己配置的模型
         updateModel(model) {
             this.data = model;
-            this.valuesRange = model.valueRange.split(",");
             this.dialogUserOperaion = true;
             this.isOperation = true;
         },
@@ -257,12 +264,10 @@ export default {
             this.$axios.post('/user-health/save', userHealths).then(response => {
                 const { data } = response;
                 if (data.code === 200) {
-                    this.$swal.fire({
-                        title: '记录健康',
-                        text: '记录成功',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 1000,
+                    this.$notify({
+                        title: '记录操作',
+                        message: '记录成功',
+                        type: 'success'
                     });
                     // 两秒后跳转出去
                     setTimeout(() => {
@@ -301,7 +306,6 @@ export default {
         async addOperation() {
             try {
                 this.data.userId = this.userId;
-                this.data.valueRange = this.valuesRange.join(',');
                 const response = await this.$axios.post('/health-model-config/save', this.data);
                 this.$message[response.data.code === 200 ? 'success' : 'error'](response.data.msg);
                 if (response.data.code === 200) {
@@ -318,8 +322,10 @@ export default {
             this.dialogUserOperaion = true;
         },
         handleClick(tab, event) {
+            // 先去清空条件
+            this.userHealthModel = {};
             if (this.activeName === 'first') {
-                this.userHealthModel.userId = null;
+                this.userHealthModel.isGlobal = true;
             } else {
                 const userInfo = sessionStorage.getItem('userInfo');
                 const entity = JSON.parse(userInfo);
@@ -349,10 +355,16 @@ export default {
     border-radius: 5px;
 }
 
+.item-model{
+    padding: 8px;
+    box-sizing: border-box;
+}
+
 .input-model {
     font-size: 20px;
+    box-sizing: border-box;
     font-weight: bold;
-    padding: 0 20px;
+    padding: 20px;
     user-select: none;
     border-radius: 5px;
     border: none;

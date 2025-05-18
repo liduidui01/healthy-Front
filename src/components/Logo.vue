@@ -1,6 +1,6 @@
 <template>
     <span class="logo">
-        <el-image style="width: 30px; height: 30px" src="/logo.png" fit="fill"></el-image>
+        <el-image style="width:25px; height: 25px" src="/logo.png" fit="fill"></el-image>
         <div v-if="!flag">
             <span :style="{ color: bag, display: 'block' }">{{ sysName }}</span>
         </div>
@@ -11,12 +11,16 @@ export default {
     name: "Logo",
     data() {
         return {
-            sysName: '健康有道'
+            
         }
     },
     props: {
         flag: {
             type: Boolean,
+            required: false
+        },
+        sysName: {
+            type: String,
             required: false
         },
         bag: {

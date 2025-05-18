@@ -16,7 +16,7 @@
     "crypto-js": "^4.2.0",
     "echarts": "^4.8.0",
     "element-china-area-data": "^6.1.0",
-    "element-ui": "^2.15.0",
+    "element-ui": "^2.15.14",
     "fingerprintjs2": "^2.1.4",
     "js-md5": "^0.8.3",
     "jwt-decode": "^3.1.2",

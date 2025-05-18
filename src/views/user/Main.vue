@@ -2,13 +2,15 @@
     <div class="user-container">
         <div class="menus-container"
             style="position: sticky;top: 0;z-index: 1000;background-color: rgb(255, 255, 255);">
+            <!-- 菜单目录 -->
             <UserMenu :menus="routers" :userInfo="userInfo" @eventListener="eventListener" />
         </div>
         <div class="content-container">
+            <!-- 路由出口 -->
             <router-view class="route-container"></router-view>
         </div>
-        <!-- 个人中心 -->
-        <el-dialog :show-close="false" :visible.sync="dialogOperaion" width="26%">
+        <!-- 个人中心弹窗 -->
+        <el-dialog :show-close="false" :visible.sync="dialogOperaion" width="30%">
             <div slot="title" style="padding: 25px 0 0 20px;">
                 <span style="font-size: 18px;font-weight: 800;">个人中心</span>
             </div>
@@ -37,6 +39,7 @@
                 </el-row>
             </el-row>
             <span slot="footer" class="dialog-footer">
+                
                 <el-button class="customer" size="small" style="background-color: rgb(241, 241, 241);border: none;"
                     @click="dialogOperaion = false">取 消</el-button>
                 <el-button size="small" style="background-color: #15559a;border: none;" class="customer" type="info"
@@ -74,108 +77,6 @@
                 <el-button size="small" style="background-color: #15559a;border: none;" class="customer" type="info"
                     @click="updateUserPwd">修改</el-button>
             </span>
-        </el-dialog>
-        <!-- 记录饮食 -->
-        <el-dialog :visible.sync="dietDialog" width="28%" :show-close="false">
-            <div slot="title">
-                <p style="color: rgba(0, 1, 4, 0.8);margin: 0;padding: 20px;font-size: 18px;font-weight: 600;">
-                    记录饮食</p>
-            </div>
-            <div style="padding: 10px 20px;">
-                <el-row>
-                    <el-col :span="6">
-                        <span @click="addDietHistory"
-                            style="margin-top: 10px;display: inline-block;color: white;background-color: #15559a;padding: 5px 8px;border-radius: 3px;font-size: 12px;">
-                            <i class="el-icon-circle-plus"></i>
-                            确认提交
-                        </span>
-                    </el-col>
-                    <el-col :span="18">
-                        <label for="nutrition-select">选菜单</label>
-                        <select id="nutrition-select" v-model="selecedFoodIndex" @change="foodChange">
-                            <option v-for="option in foodList" :key="option.name" :value="option.id">
-                                {{ option.name }}
-                            </option>
-                        </select>
-                    </el-col>
-                </el-row>
-            </div>
-            <div style="padding: 10px 20px;">
-                <el-row v-for="(checkFood, index) in isCheckFood" :key="index">
-                    <el-col :span="10">
-                        <img style="width: 100%;height: 100px;border-radius: 5px;" :src="checkFood.cover" />
-                    </el-col>
-                    <el-col :span="14" style="padding: 0 20px;">
-                        <div>
-                            <input class="modelInput" type="text" v-model="checkFood.mgValue" placeholder="克数">
-                            <span>克</span>
-                        </div>
-                        <div style="margin: 10px 5px;">
-                            <div style="font-size: 16px;">
-                                <span>{{ checkFood.name }} - {{ checkFood.tag }}</span>
-                            </div>
-                            <div style="margin-top: 6px;">
-                                <span class="removeFood" @click="removeFood(checkFood)">
-                                    <i class="el-icon-circle-close"></i>
-                                    移除
-                                </span>
-                            </div>
-                        </div>
-                    </el-col>
-                </el-row>
-            </div>
-        </el-dialog>
-        <!-- 记录健康指标 -->
-        <el-dialog :visible.sync="healthModelConfigDialog" width="28%" :show-close="false">
-            <div slot="title">
-                <p style="color: rgba(0, 1, 4, 0.8);margin: 0;padding: 20px;font-size: 18px;font-weight: 600;">
-                    记录健康指标</p>
-            </div>
-            <div style="padding: 10px 20px;">
-                <el-row>
-                    <el-col :span="6">
-                        <span @click="addUserHealthHistory"
-                            style="margin-top: 10px;display: inline-block;color: white;background-color: #15559a;padding: 5px 8px;border-radius: 3px;font-size: 12px;">
-                            <i class="el-icon-circle-plus"></i>
-                            确认提交
-                        </span>
-                    </el-col>
-                    <el-col :span="18">
-                        <label for="nutrition-select">选择健康指标</label>
-                        <select id="nutrition-select" v-model="selecedHealthModelIndex" @change="healthModelChange">
-                            <option v-for="option in healthModelConfig" :key="option.modelName" :value="option.id">
-                                {{ option.modelName }}
-                            </option>
-                        </select>
-                    </el-col>
-                </el-row>
-            </div>
-            <div style="padding: 10px 20px;">
-                <el-row v-for="(healthModel, index) in isCheckHealthModelConfig" :key="index"
-                    style="border-bottom: 1px solid #f1f1f1;padding: 15px 0;">
-                    <el-col :span="4">
-                        <img style="width: 90%;height: 60px;border-radius: 5px;margin-top: 26px;"
-                            :src="healthModel.modelIcon" />
-                    </el-col>
-                    <el-col :span="20" style="padding: 0 20px;">
-                        <div>
-                            <input class="modelInput" type="text" v-model="healthModel.input" placeholder="数值">
-                            <span>{{ healthModel.modelUnit }}</span>
-                        </div>
-                        <div style="margin: 10px 5px;">
-                            <div style="font-size: 16px;">
-                                <span>{{ healthModel.modelName }} - {{ healthModel.modelSymbol }}</span>
-                            </div>
-                            <div style="margin-top: 6px;">
-                                <span class="removeFood" @click="removeHealthModel(healthModel)">
-                                    <i class="el-icon-circle-close"></i>
-                                    移除
-                                </span>
-                            </div>
-                        </div>
-                    </el-col>
-                </el-row>
-            </div>
         </el-dialog>
     </div>
 </template>
@@ -307,111 +208,27 @@ export default {
             // 个人中心
             if (event === 'center') {
                 this.dialogOperaion = !this.dialogOperaion;
+                return;
             }
             // 密码重置
-            else if (event === 'resetPwd') {
+            if (event === 'resetPwd') {
                 this.dialogRetPwdOperaion = true;
-                // 搜索页搜索
-            } else if (event === 'search-detail') {
+                return;
+            }
+            // 搜索
+            if (event === 'search-detail') {
                 this.$router.push('/search-detail');
+                return;
             }
             // 退出登录
-            else if (event === 'loginOut') {
+            if (event === 'loginOut') {
                 this.loginOutOperation();
+                return;
             }
             // 健康指标记录
-            else if (event === 'healthDataRecord') {
+            if (event === 'healthDataRecord') {
                 this.$router.push('/record');
-            }
-        },
-        removeFood(food) {
-            // 清空输入项
-            food.mgValue = '';
-            this.isCheckFood = this.isCheckFood.filter(item => item.id !== food.id);
-        },
-        removeHealthModel(healthModel) {
-            // 清空输入项
-            healthModel.input = '';
-            this.isCheckHealthModelConfig = this.isCheckHealthModelConfig.filter(item => item.id !== healthModel.id);
-        },
-        foodChange() {
-            const food = this.foodList[this.selecedFoodIndex - 1];
-            const exists = this.isCheckFood.some(item => item.id === food.id);
-            // 如果不存在，则添加新选的菜单
-            if (!exists) {
-                this.isCheckFood.unshift(food);
-            } else {
-                console.log("菜谱已经添加");
-            }
-        },
-        // 提交饮食记录
-        async addUserHealthHistory() {
-            const healthModels = this.isCheckHealthModelConfig.map(entity => {
-                return {
-                    healthModelId: entity.id,
-                    inputValue: entity.input
-                }
-            });
-            try {
-                const response = await this.$axios.post(`/user-health/save`, healthModels);
-                const { data } = response;
-                if (data.code === 200) {
-                    this.healthModelConfigDialog = false;
-                    this.isCheckHealthModelConfig = [];
-                    this.$swal.fire({
-                        title: '记录健康指标',
-                        text: '记录成功',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
-                }
-            } catch (e) {
-                console.error(`记录健康指标异常`, e);
-            }
-        },
-        // 提交饮食记录
-        async addDietHistory() {
-            const foodIds = this.isCheckFood.map(entity => entity.id).join(",");
-            const foodNum = this.isCheckFood.map(entity => entity.mgValue).join(",");
-            const diet = {
-                foodIds: foodIds,
-                foodNum: foodNum
-            }
-            try {
-                const response = await this.$axios.post(`/diet/save`, diet);
-                const { data } = response;
-                if (data.code === 200) {
-                    this.dietDialog = false;
-                    this.isCheckFood = [];
-                    this.$swal.fire({
-                        title: '记录饮食，拥抱生活',
-                        text: data.msg,
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
-                }
-            } catch (e) {
-                console.error(`饮食新增异常：`, e);
-            }
-        },
-        async loadHealthModelConfigList() {
-            try {
-                const response = await this.$axios.post(`/health-model-config/list`, {});
-                const { data } = response;
-                this.healthModelConfig = data.data;
-            } catch (e) {
-                console.error(`查询健康配置异常：`, e);
-            }
-        },
-        async loadFoodList() {
-            try {
-                const response = await this.$axios.post(`/food/list`, {});
-                const { data } = response;
-                this.foodList = data.data;
-            } catch (e) {
-                console.error(`查询饮食配置异常：`, e);
+                return;
             }
         },
         async loginOutOperation() {
@@ -491,9 +308,9 @@ label {
 }
 
 .content-container {
-    padding: 10px 180px;
+    padding: 10px 120px;
     box-sizing: border-box;
-    min-height: calc(100vh - 200px);
+    min-height: calc(100vh - 120px);
     overflow-x: hidden;
 }
 

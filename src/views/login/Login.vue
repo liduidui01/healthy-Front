@@ -2,13 +2,13 @@
     <div class="login-container">
         <div class="login-panel">
             <div class="logo">
-                <Logo :bag="colorLogo"/>
+                <Logo :bag="colorLogo" sysName="健康有道"/>
             </div>
             <div class="text">
-                <input v-model="act" class="act" placeholder="输入账号" />
+                <input v-model="act" class="act" placeholder="账号" />
             </div>
             <div class="text">
-                <input v-model="pwd" class="pwd" type="password" placeholder="输入密码" />
+                <input v-model="pwd" class="pwd" type="password" placeholder="密码" />
             </div>
             <div>
                 <span class="login-btn" @click="login">立即登录</span>
@@ -70,13 +70,13 @@ export default {
                 }
                 setToken(data.data.token);
                 // 使用Swal通知登录成功，延迟后跳转
-                this.$swal.fire({
-                    title: '登录成功',
-                    text: '即将进入系统...',
-                    icon: 'success',
-                    showConfirmButton: false,
-                    timer: DELAY_TIME,
-                });
+                // this.$swal.fire({
+                //     title: '登录成功',
+                //     text: '即将进入系统...',
+                //     icon: 'success',
+                //     showConfirmButton: false,
+                //     timer: DELAY_TIME,
+                // });
                 // 根据角色延迟跳转
                 setTimeout(() => {
                     const { role } = data.data;
@@ -109,9 +109,11 @@ export default {
     user-select: none;
 }
 .login-container {
+    // background-image: url('/bag.png');
+    // background-repeat:repeat;
     width: 100%;
     min-height: 100vh;
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(255,255,255);
     display: flex;
     /* 启用Flexbox布局 */
     justify-content: center;
@@ -122,11 +124,12 @@ export default {
     /* 如果需要垂直居中，确保子元素也是这样排列 */
 
     .login-panel {
-        width: 313px;
+        width: 263px;
         height: auto;
         padding: 40px 30px 16px 30px;
-        border-radius: 3px;
-         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+        border-radius: 10px;
+        background-color: rgb(255,255,255);
+        box-shadow: 0 4px 6px rgba(36, 36, 36, 0.1), 0 1px 3px rgba(40, 40, 40, 0.06);
 
         .logo {
             margin: 10px 0 30px 0;
@@ -135,13 +138,16 @@ export default {
         .act,
         .pwd {
             margin: 8px 0;
-            height: 43px;
-            line-height: 43px;
+            height: 53px;
+            line-height: 53px;
             width: 100%;
             padding: 0 8px;
+            background-color: rgb(248,248,248);
             box-sizing: border-box;
-            border: 1px solid #c8d4e7;
-            border-radius: 3px;
+            border: 1px solid rgb(248,248,248);
+            border-radius: 5px;
+            font-weight: 800;
+            font-size: 18px;
             padding: 0 15px;
             margin-top: 13px;
         }
@@ -149,10 +155,10 @@ export default {
         .act:focus,
         .pwd:focus {
             outline: none;
-            border: 1px solid rgb(0, 185, 107);
+            background-color: rgb(242,243,244);
             transition: 1.2s;
         }
-
+        
         .role {
             display: inline-block;
             color: rgb(30, 102, 147);
@@ -169,17 +175,13 @@ export default {
         height: 43px;
         line-height: 43px;
         width: 100%;
-        background-color: rgb(0, 185, 107);
+        background-color: rgb(128, 158, 76);
         font-size: 14px !important;
         border: none;
-        color: white;
+        color: rgb(250,250,250);
         padding: 0 !important;
         cursor: pointer;
         user-select: none;
-    }
-
-    .login-btn:hover {
-        background-color: #5782c6;
     }
 
     .tip {

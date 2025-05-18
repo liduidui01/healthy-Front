@@ -207,8 +207,8 @@ export default {
         };
     },
     watch: {
-        contentId(newVal,oldVal){
-            if(newVal !== oldVal){
+        contentId(newVal, oldVal) {
+            if (newVal !== oldVal) {
                 this.loadCommentList();
             }
         },
@@ -227,36 +227,19 @@ export default {
         getUserInfo() {
             const userInfo = sessionStorage.getItem("userInfo");
             this.userData = JSON.parse(userInfo);
-            console.log(this.userData);
             this.userId = this.userData.id;
         },
         // 点赞 或 取消点赞
         upvote(comment) {
-            let upvoteList = comment.upvoteList ? comment.upvoteList.split(',') : [];
-            if (upvoteList.length) {
-                // 界面反映
-                if (comment.upvoteFlag) {
-                    // 取消点赞
-                    let index = upvoteList.indexOf(this.userData.id.toString());
-                    if (index !== -1) {
-                        upvoteList.splice(index, 1); // 移除用户ID
-                    }
-                } else {
-                    // 点赞
-                    if (!upvoteList.includes(this.userData.userId.toString())) {
-                        upvoteList.push(this.userData.userId.toString()); // 添加用户ID
-                    }
-                }
+            const evaluations = {
+                id: comment.id
             }
-            let evalustions = {
-                id: comment.id,
-                upvoteList: upvoteList.length ? upvoteList.join(',') : this.userData.id
-            }
-            this.$axios.put(`evaluations/update`, evalustions).then(res => {
+            this.$axios.put(`evaluations/update`, evaluations).then(res => {
                 if (res.data.code == 200) {
-                    comment.upvoteList = upvoteList.join(','); // 更新upvoteList字符串
-                    comment.upvoteFlag = !comment.upvoteFlag; // 切换点赞状态标志
-                    comment.upvoteCount += 1;
+                    console.log(JSON.stringify(res.data.data));
+                    
+                    comment.upvoteFlag = res.data.data.flag;
+                    comment.upvoteCount = Number(res.data.data.num);
                 }
             }).catch(err => {
                 console.error(`点赞状态设置异常 -> `, err);
@@ -383,7 +366,7 @@ export default {
                     setTimeout(() => {
                         this.loadCommentList()
                     }, 1100)
-                }else{
+                } else {
                     this.$swal.fire({
                         title: '评论异常',
                         text: res.data.msg,
@@ -438,7 +421,7 @@ export default {
                         // 重新加载评论列表
                         this.loadCommentList();
                     }, 1300)
-                }else{
+                } else {
                     this.$swal.fire({
                         title: '评论异常',
                         text: res.data.msg,
@@ -479,7 +462,7 @@ export default {
                         // 重新加载评论列表
                         this.loadCommentList();
                     }, 1300)
-                }else{
+                } else {
                     this.$swal.fire({
                         title: '评论异常',
                         text: res.data.msg,

@@ -1,7 +1,18 @@
 <template>
     <div style="position: relative;">
-        <img :src="activeData.cover" :style="{ width: width, height: height, borderRadius: borderRadius }" />
-        <h3 @click="onClick" class="tip-name" style="position: absolute;bottom: 0;">{{ activeData.name }}</h3>
+        <img :src="activeData.cover" style="min-height: 218px;max-height: 308px;"
+            :style="{ width: width, borderRadius: borderRadius }" />
+        <h3 class="tip-name" style="position: absolute;bottom: 0;">
+            <div @click="onClick" style="font-size: 12px;">{{ activeData.name }}</div>
+            <div class="point-container">
+                <span :style="{
+                    backgroundColor: index === indexPoint ? 'rgb(254, 244, 203)' : '',
+                    height: index === indexPoint ? '15px' : '10px',
+                    width: index === indexPoint ? '30px' : '20px'
+                }" v-for="(point, indexPoint) in data" :key="index">
+                </span>
+            </div>
+        </h3>
     </div>
 </template>
 
@@ -18,13 +29,9 @@ export default {
             type: String,
             default: '100%'
         },
-        height: { // 高度
-            type: String,
-            default: '228px'
-        },
         borderRadius: { // 图片边框曲度
             type: String,
-            default: '5px'
+            default: '10px'
         },
         time: { // 轮播时间
             type: Number,
@@ -34,7 +41,7 @@ export default {
     watch: {
         data: {
             handler(v1, v2) {
-                this.activeData = {... this.data[0]};
+                this.activeData = { ... this.data[0] };
                 this.config();
             },
             deep: true,
@@ -65,7 +72,7 @@ export default {
 .tip-name {
     text-align: center;
     width: 100%;
-    padding: 15px 0;
+    padding: 10px 0;
     color: aliceblue;
     margin: 0;
     margin-bottom: 4px;
@@ -73,5 +80,24 @@ export default {
     border-bottom-right-radius: 5px;
     cursor: pointer;
     background-color: rgba(5, 0, 0, 0.6);
+}
+
+.point-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+
+    span {
+        width: 20px;
+        height: 10px;
+        background-color: rgb(245, 245, 245);
+        border-radius: 5px;
+    }
+
+    span:hover {
+        background-color: rgb(237, 222, 105);
+    }
 }
 </style>

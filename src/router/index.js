@@ -38,22 +38,57 @@ const routes = [
     children: [
       {
         path: "/adminLayout",
-        name: '数据总览',
-        icon: 'el-icon-data-analysis',
+        name: '仪表盘',
+        icon: 'el-icon-pie-chart',
         component: () => import(`@/views/admin/Main.vue`),
         meta: { requireAuth: true },
       },
       {
         path: "/userManage",
         name: '用户管理',
-        icon: 'el-icon-user-solid',
+        icon: 'el-icon-user',
         component: () => import(`@/views/admin/UserManage.vue`),
+        meta: { requireAuth: true },
+      },
+      {
+        path: "/tagsManage",
+        name: '资讯分类',
+        icon: 'el-icon-house',
+        component: () => import(`@/views/admin/TagsManage.vue`),
+        meta: { requireAuth: true },
+      },
+      {
+        path: "/newsManage",
+        name: '资讯管理',
+        icon: 'el-icon-document',
+        component: () => import(`@/views/admin/NewsManage.vue`),
+        meta: { requireAuth: true },
+      },
+      {
+        path: "/healthModelConfigManage",
+        name: '模型管理',
+        icon: 'el-icon-files',
+        component: () => import(`@/views/admin/HealthModelConfigManage.vue`),
+        meta: { requireAuth: true },
+      },
+      {
+        path: "/userHealthManage",
+        name: '健康记录',
+        icon: 'el-icon-c-scale-to-original',
+        component: () => import(`@/views/admin/UserHealthManage.vue`),
+        meta: { requireAuth: true },
+      },
+      {
+        path: "/messageManage",
+        name: '消息管理',
+        icon: 'el-icon-message',
+        component: () => import(`@/views/admin/MessageManage.vue`),
         meta: { requireAuth: true },
       },
       {
         path: "/evaluationsManage",
         name: '评论管理',
-        icon: 'el-icon-chat-round',
+        icon: 'el-icon-chat-dot-round',
         component: () => import(`@/views/admin/EvaluationsManage.vue`),
         meta: { requireAuth: true },
       },
@@ -67,7 +102,7 @@ const routes = [
     },
     children: [
       {
-        name: '健康资讯',
+        name: '资讯首页',
         path: "/news-record",
         component: () => import(`@/views/user/Home.vue`),
         meta: {
@@ -75,7 +110,7 @@ const routes = [
         },
       },
       {
-        name: '我的收藏',
+        name: '我的收藏夹',
         path: "/my-save",
         component: () => import(`@/views/user/NewsSave.vue`),
         meta: {
@@ -83,7 +118,7 @@ const routes = [
         },
       },
       {
-        name: '健康指标',
+        name: '健康数据',
         path: "/user-health-model",
         component: () => import(`@/views/user/UserHealthModel.vue`),
         meta: {

@@ -37,11 +37,19 @@ export default {
     },
   },
   watch: {
-    selectedValue(v1, v2) {
-      this.$emit('on-selected', v1);
+    selectedValue: {
+      handler(newVal, oldVal) {
+        this.$emit('on-selected', newVal);
+      },
+      deep: true,
+      immediate: false // 如果需要在初始化时也触发监听，可以设为 true
     },
-    values(v1,v2){
-      this.initChart();
+    values: {
+      handler(newVal, oldVal) {
+        this.initChart();
+      },
+      deep: true,
+      immediate: false // 根据需要选择是否开启
     }
   },
   data() {
@@ -68,7 +76,7 @@ export default {
         },
         tooltip: {
           trigger: 'axis',
-          formatter: '{b}{c}',
+          formatter: '{b}->{c}',
         },
         legend: {
           data: ['']
@@ -78,16 +86,16 @@ export default {
           axisLine: { show: false },
           axisTick: { show: false },
           axisLabel: {
-            color: 'rgb(102, 102, 102)',
-            fontSize: '12'
+            color: 'rgb(51，51，51)',
+            fontSize: '14'
           },
         },
         yAxis: {
           axisLine: { show: false },
           axisTick: { show: false },
           axisLabel: {
-            color: 'rgb(102, 102, 102)',
-            fontSize: '12'
+            color: 'rgb(51，51，51)',
+            fontSize: '14'
           },
         },
         series: [{
@@ -130,10 +138,10 @@ export default {
   border-radius: 3px;
 
   .tag {
-    font-size: 16px;
-    padding: 15px 6px;
+    font-size: 14px;
+    padding: 15px 16px;
     display: inline-block;
-    color: #333;
+    color: #6f6d6d;
     font-weight: bold;
   }
 

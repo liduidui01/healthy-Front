@@ -1,57 +1,31 @@
 <template>
-    <el-row style="background-color: #FFFFFF;padding: 10px 0;border-radius: 5px;">
-        <el-row style="padding: 10px 0 20px;border-bottom: 1px solid #f1f1f1;margin: 0 10px;">
+    <el-row style="background-color: #FFFFFF;padding: 5px 0;border-radius: 5px;">
+        <el-row style="padding: 10px;margin-left: 10px;">
             <el-row>
-                <span class="top-bar">用户名</span>
-                <el-input size="small" style="width: 188px;" v-model="userQueryDto.userName" placeholder="输入处" clearable
-                    @clear="handleFilterClear">
-                </el-input>
-                <span class="top-bar">用户账号</span>
-                <el-input size="small" style="width: 188px;" v-model="userQueryDto.userAccount" placeholder="输入处"
-                    clearable @clear="handleFilterClear">
-                </el-input>
-                <span class="top-bar">用户邮箱</span>
-                <el-input size="small" style="width: 188px;" v-model="userQueryDto.userEmail" placeholder="输入处"
-                    clearable @clear="handleFilterClear">
-                </el-input>
-                <span class="top-bar">注册时间</span>
-                <el-date-picker size="small" style="margin-left: 10px;width: 220px;" v-model="searchTime"
-                    type="daterange" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间">
+                <el-date-picker size="small" style="width: 220px;" v-model="searchTime" type="daterange"
+                    range-separator="至" start-placeholder="注册开始" end-placeholder="注册结束">
                 </el-date-picker>
-            </el-row>
-            <el-row style="margin-top: 20px;">
-                <span class="top-bar">禁言</span>
-                <el-switch style="user-select: none;margin-right: 20px;" v-model="userQueryDto.isWord"
-                    active-color="#13ce66" inactive-color="rgb(226, 226, 226)">
-                </el-switch>
-                <span class="top-bar">封号</span>
-                <el-switch style="user-select: none;margin-right: 20px;" v-model="userQueryDto.isLogin"
-                    active-color="#13ce66" inactive-color="rgb(226, 226, 226)">
-                </el-switch>
-                <el-button size="small" class="customer"
-                    style="margin-left: 20px;background-color: rgb(43, 121, 203);border: none;" type="primary"
-                    @click="handleFilter">立即查询</el-button>
-                <el-button size="small" class="customer reset"
-                    style="background-color: #f1f1f1;border: none;color: #909399;border: 1px solid #f1f1f1;" type="info"
-                    @click="resetQueryCondition">条件重置</el-button>
-                <el-button size="small" style="background-color: rgb(43, 121, 203);border: none;" class="customer"
-                    type="info" @click="add()">新增用户</el-button>
-                <el-button size="small" class="customer"
-                    :style="{ marginLeft: '10px', backgroundColor: selectedRows.length ? '#a7535a' : '#F1F1F1', border: 'none', color: selectedRows.length ? '#FFFFFF' : '#909399' }"
-                    type="danger" @click="batchDelete()">批量删除</el-button>
+                <el-input size="small" style="width: 188px;margin-left: 5px;margin-right: 6px;"
+                    v-model="userQueryDto.userName" placeholder="用户名" clearable @clear="handleFilterClear">
+                    <el-button slot="append" @click="handleFilter" icon="el-icon-search"></el-button>
+                </el-input>
+                <span style="float: right;">
+                    <el-button size="small"
+                        style="background-color: rgb(96, 98, 102);color: rgb(247,248,249);border: none;"
+                        class="customer" type="info" @click="add()"><i class="el-icon-plus"></i>新增用户</el-button>
+                </span>
             </el-row>
         </el-row>
-        <el-row style="margin: 10px;">
-            <el-table row-key="id" @selection-change="handleSelectionChange" :data="tableData" style="width: 100%">
-                <el-table-column type="selection" width="55"></el-table-column>
+        <el-row style="margin: 0 20px;border-top: 1px solid rgb(245,245,245);">
+            <el-table @selection-change="handleSelectionChange" :data="tableData" style="width: 100%">
                 <el-table-column prop="userAvatar" width="68" label="头像">
                     <template slot-scope="scope">
-                        <el-avatar :size="30" :src="scope.row.userAvatar" style="margin-top: 10px;"></el-avatar>
+                        <el-avatar :size="25" :src="scope.row.userAvatar" style="margin-top: 10px;"></el-avatar>
                     </template>
                 </el-table-column>
-                <el-table-column prop="userName" width="88" label="名称"></el-table-column>
+                <el-table-column prop="userName" label="名称"></el-table-column>
                 <el-table-column prop="userAccount" width="128" label="账号"></el-table-column>
-                <el-table-column prop="userEmail" width="148" label="用户邮箱"></el-table-column>
+                <el-table-column prop="userEmail" width="168" label="邮箱"></el-table-column>
                 <el-table-column prop="userRole" width="68" label="角色">
                     <template slot-scope="scope">
                         <span>{{ scope.row.userRole === 1 ? '管理员' : '用户' }}</span>
@@ -59,42 +33,49 @@
                 </el-table-column>
                 <el-table-column prop="isLogin" width="108" label="封号">
                     <template slot-scope="scope">
-                        <el-switch @change="handleSwitchChange(scope.row.id, scope.row.isLogin, true)"
-                            style="user-select: none;" v-model="scope.row.isLogin" active-color="#13ce66"
-                            inactive-color="rgb(226, 226, 226)">
-                        </el-switch>
+                        <i v-if="scope.row.isLogin" style="margin-right: 5px;" class="el-icon-warning"></i>
+                        <i v-else style="margin-right: 5px;color: rgb(253, 199, 50);" class="el-icon-success"></i>
+                        <el-tooltip v-if="scope.row.isLogin" class="item" effect="dark"
+                            content="账号一经封号，不可登录系统。经由管理员解禁后，方可登录" placement="bottom-end">
+                            <span style="text-decoration: underline;text-decoration-style: dashed;">已封号</span>
+                        </el-tooltip>
+                        <span v-else>正常</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="isWord" width="108" label="禁言">
                     <template slot-scope="scope">
-                        <el-switch @change="handleSwitchChange(scope.row.id, scope.row.isWord, false)"
-                            style="user-select: none;" v-model="scope.row.isWord" active-color="#13ce66"
-                            inactive-color="rgb(226, 226, 226)">
-                        </el-switch>
+                        <i v-if="scope.row.isWord" style="margin-right: 5px;" class="el-icon-warning"></i>
+                        <i v-else style="margin-right: 5px;color: rgb(253, 199, 50);" class="el-icon-success"></i>
+                        <el-tooltip v-if="scope.row.isWord" class="item" effect="dark"
+                            content="账号一经禁言，不可评论互动。经由管理员解禁后，方可评论" placement="bottom-end">
+                            <span style="text-decoration: underline;text-decoration-style: dashed;">已禁言</span>
+                        </el-tooltip>
+                        <span v-else>正常</span>
                     </template>
                 </el-table-column>
                 <el-table-column :sortable="true" prop="createTime" width="168" label="注册于"></el-table-column>
-                <el-table-column label="操作">
+                <el-table-column label="操作" width="170">
                     <template slot-scope="scope">
+                        <span class="text-button" @click="handleStatus(scope.row)">账号状态</span>
                         <span class="text-button" @click="handleEdit(scope.row)">编辑</span>
                         <span class="text-button" @click="handleDelete(scope.row)">删除</span>
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination style="margin: 20px 0;" @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                :current-page="currentPage" :page-sizes="[5, 7]" :page-size="pageSize"
+            <el-pagination style="margin:10px 0;" @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                :current-page="currentPage" :page-sizes="[10, 20]" :page-size="pageSize"
                 layout="total, sizes, prev, pager, next, jumper" :total="totalItems"></el-pagination>
         </el-row>
         <!-- 操作面板 -->
-        <el-dialog :show-close="false" :visible.sync="dialogUserOperaion" width="24%">
+        <el-dialog :show-close="false" :visible.sync="dialogUserOperaion" width="25%">
             <div slot="title">
-                <p class="dialog-title">{{ !isOperation ? '新增新用户' : '编辑用户信息' }}</p>
+                <p class="dialog-title">{{ !isOperation ? '新增用户' : '修改用户信息' }}</p>
             </div>
             <div style="padding:0 20px;">
                 <el-row>
                     <el-upload class="avatar-uploader" action="/api/personal-heath/v1.0/file/upload"
                         :show-file-list="false" :on-success="handleAvatarSuccess">
-                        <img v-if="data.userAvatar" :src="data.userAvatar" class="dialog-avatar">
+                        <img v-if="userAvatar" :src="userAvatar" class="dialog-avatar">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
                 </el-row>
@@ -110,12 +91,40 @@
                 </el-row>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button size="small" v-if="!isOperation" style="background-color: rgb(43, 121, 203);border: none;"
-                    class="customer" type="info" @click="addOperation">新增</el-button>
-                <el-button size="small" v-else style="background-color: rgb(43, 121, 203);border: none;"
-                    class="customer" type="info" @click="updateOperation">修改</el-button>
+                <el-button size="small" v-if="!isOperation"
+                    style="background-color: rgb(96, 98, 102);color: rgb(247,248,249);border: none;" class="customer"
+                    type="info" @click="addOperation()">新增</el-button>
+                <el-button size="small" v-else
+                    style="background-color: rgb(96, 98, 102);color: rgb(247,248,249);border: none;" class="customer"
+                    type="info" @click="updateOperation()">修改</el-button>
+                <el-button class="customer" size="small" style="background-color: rgb(211, 241, 241);border: none;"
+                    @click="cannel">取消</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog :show-close="false" :visible.sync="dialogStatusOperation" width="25%">
+            <div slot="title">
+                <p class="dialog-title">账号状态</p>
+            </div>
+            <div style="padding:0 20px;">
+                <el-row>
+                    <el-switch active-color="rgb(230, 62, 49)" inactive-color="rgb(246,246,246)" v-model="data.isLogin"
+                        active-text="封号" inactive-text="正常状态">
+                    </el-switch>
+                </el-row>
+                <el-row style="margin: 20px 0;">
+                    <el-switch active-color="rgb(230, 62, 49)" inactive-color="rgb(246,246,246)" v-model="data.isWord"
+                        active-text="禁言" inactive-text="正常状态">
+                    </el-switch>
+                </el-row>
+                <span class="dialog-hover">设为管理员</span>
+                <el-switch v-model="roleStatus" active-color="rgb(230, 62, 49)" inactive-color="rgb(246,246,246)">
+                </el-switch>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button size="small" style="background-color: rgb(96, 98, 102);color: rgb(247,248,249);border: none;"
+                    class="customer" type="info" @click="comfirmStatus">确认</el-button>
                 <el-button class="customer" size="small" style="background-color: rgb(241, 241, 241);border: none;"
-                    @click="dialogUserOperaion = false">取消</el-button>
+                    @click="cannel">取消</el-button>
             </span>
         </el-dialog>
     </el-row>
@@ -125,12 +134,15 @@
 export default {
     data() {
         return {
+            roleStatus: false,
             userPwd: '',
-            data: { userAvatar: '' },
+            userAvatar: '',
+            data: {},
             filterText: '',
             currentPage: 1,
-            pageSize: 7,
+            pageSize: 10,
             totalItems: 0,
+            dialogStatusOperation: false,
             dialogUserOperaion: false, // 开关
             isOperation: false, // 开关-标识新增或修改
             tableData: [],
@@ -141,28 +153,54 @@ export default {
             messsageContent: ''
         };
     },
-    watch: {
-        dialogUserOperaion(v1, v2) {
-            if (!v1) {
-                this.isOperation = !this.isOperation;
-            }
-            if (!v1 && v2) {
-                this.data = {};
-            }
-        },
-    },
     created() {
         this.fetchFreshData();
     },
     methods: {
+        comfirmStatus() {
+            const userUpdateDto = {
+                id: this.data.id,
+                isLogin: this.data.isLogin,
+                isWord: this.data.isWord,
+                userRole: this.roleStatus ? 1 : 2
+            }
+            this.$axios.put(`/user/backUpdate`, userUpdateDto).then(res => {
+                if (res.data.code === 200) {
+                    this.$notify({
+                        duration: 2000,
+                        title: '操作反馈',
+                        message: '操作成功',
+                        type: 'success'
+                    });
+                    this.dialogStatusOperation = false;
+                    this.fetchFreshData();
+                }
+            }).catch(error => {
+                console.log("修改状态异常：" + error);
+            })
+        },
+        handleStatus(data) {
+            this.dialogStatusOperation = true;
+            this.roleStatus = data.userRole === 1
+            this.data = data;
+        },
         handleAvatarSuccess(res, file) {
             if (res.code !== 200) {
-                this.$message.error(`用户头像上传异常`);
+                this.$notify({
+                    duration: 2000,
+                    title: '头像上传',
+                    message: '异常',
+                    type: 'error'
+                });
                 return;
             }
-            this.$message.success(`用户头像上传成功`);
-            this.data.userAvatar = res.data;
-            console.log(this.data);
+            this.$notify({
+                duration: 2000,
+                title: '头像上传',
+                message: '成功',
+                type: 'success'
+            });
+            this.userAvatar = res.data;
         },
         switchChange() {
             this.fetchFreshData();
@@ -178,13 +216,13 @@ export default {
                 }
                 const response = await this.$axios.put(`/user/backUpdate`, param);
                 if (response.data.code === 200) {
-                    this.$swal.fire({
-                        title: operation ? '登录状态' : '评论状态',
-                        text: operation ? '登录状态操作成功' : '评论状态操作成功',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 1000,
+                    this.$notify({
+                        duration: 2000,
+                        title: '操作提示',
+                        message: '成功',
+                        type: 'success'
                     });
+                    this.cannel();
                 }
             } catch (e) {
                 console.error(`更新用户状态异常：${e}`);
@@ -210,24 +248,17 @@ export default {
                     let ids = this.selectedRows.map(entity => entity.id);
                     const response = await this.$axios.post(`/user/batchDelete`, ids);
                     if (response.data.code === 200) {
-                        this.$swal.fire({
-                            title: '删除提示',
-                            text: response.data.msg,
-                            icon: 'success',
-                            showConfirmButton: false,
-                            timer: 2000,
+                        this.$notify({
+                            duration: 2000,
+                            title: '删除操作',
+                            message: '成功',
+                            type: 'success'
                         });
+                        this.cannel();
                         this.fetchFreshData();
                         return;
                     }
                 } catch (e) {
-                    this.$swal.fire({
-                        title: '错误提示',
-                        text: e,
-                        icon: 'error',
-                        showConfirmButton: false,
-                        timer: 2000,
-                    });
                     console.error(`用户信息删除异常：`, e);
                 }
             }
@@ -245,19 +276,18 @@ export default {
             } else {
                 this.data.userPwd = null;
             }
+            this.data.userAvatar = this.userAvatar;
             try {
                 const response = await this.$axios.put('/user/backUpdate', this.data);
-                this.$swal.fire({
-                    title: '用户信息修改',
-                    text: response.data.msg,
-                    icon: response.data.code === 200 ? 'success' : 'error',
-                    showConfirmButton: false,
-                    timer: 1000,
-                });
                 if (response.data.code === 200) {
-                    this.closeDialog();
                     this.fetchFreshData();
-                    this.clearFormData();
+                    this.cannel();
+                    this.$notify({
+                        duration: 2000,
+                        title: '修改操作',
+                        message: '成功',
+                        type: 'success'
+                    });
                 }
             } catch (error) {
                 console.error('提交表单时出错:', error);
@@ -271,24 +301,32 @@ export default {
             } else {
                 this.data.userPwd = null;
             }
+            this.data.userAvatar = this.userAvatar;
             try {
                 const response = await this.$axios.post('/user/insert', this.data);
                 this.$message[response.data.code === 200 ? 'success' : 'error'](response.data.msg);
                 if (response.data.code === 200) {
-                    this.closeDialog();
                     this.fetchFreshData();
-                    this.clearFormData();
+                    this.cannel();
+                    this.$notify({
+                        duration: 2000,
+                        title: '新增操作',
+                        message: '成功',
+                        type: 'success'
+                    });
                 }
             } catch (error) {
                 console.error('提交表单时出错:', error);
                 this.$message.error('提交失败，请稍后再试！');
             }
         },
-        closeDialog() {
-            this.dialogUserOperaion = false;
-        },
-        clearFormData() {
+        cannel() {
+            this.userAvatar = '';
+            this.userPwd = '';
             this.data = {};
+            this.isOperation = false;
+            this.dialogStatusOperation = false;
+            this.dialogUserOperaion = false;
         },
         async fetchFreshData() {
             try {
@@ -341,6 +379,7 @@ export default {
             this.dialogUserOperaion = true;
             this.isOperation = true;
             row.userPwd = null;
+            this.userAvatar = row.userAvatar;
             this.data = { ...row }
         },
         handleDelete(row) {

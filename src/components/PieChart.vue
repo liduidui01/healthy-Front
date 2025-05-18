@@ -1,11 +1,11 @@
 <template>
   <div class="line-main" :style="{ backgroundColor: bag }">
     <div ref="chart" :style="{ width: width, height: height }"></div>
-    <div>
+    <!-- <div>
       <span class="tag" :style="{ color: fontColor }">
         <i class="el-icon-pie-chart"></i>
         {{ tag }}</span>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -25,10 +25,10 @@ export default {
       type: String,
       default: '100%'
     },
-    tag: {
-      type: String,
-      default: '饼状图'
-    },
+    // tag: {
+    //   type: String,
+    //   default: '饼状图'
+    // },
     height: {
       type: String,
       default: '243px'
@@ -37,7 +37,7 @@ export default {
       type: String,
       default: '#fff'
     },
-    fontColor:{
+    fontColor: {
       type: String,
       default: '#333'
     },
@@ -104,13 +104,13 @@ export default {
             itemStyle: {
               color: function (params) {
                 const colorList = [
-                  '#525288', 
-                  '#f0a1a8', 
-                  '#541e24',
-                  '#ADD8E6', 
-                  '#87CEEB',
-                  '#6495ED',
-                  '#4682B4', 
+                  '#FF6347', // 火砖红
+                  '#FFD700', // 金黄色
+                  '#0885f9', // 酸橙绿
+                  '#FF69B4', // 热情粉
+                  '#9370DB', // 紫丁香
+                  '#00FFFF', // 天蓝色
+                  '#b84031', // 橙红色
                 ];
                 return colorList[params.dataIndex % colorList.length];
               }

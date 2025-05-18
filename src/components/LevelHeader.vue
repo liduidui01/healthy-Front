@@ -77,7 +77,6 @@ export default {
     position: relative;
     background-color: rgb(255, 255, 255);
     color: #666;
-    border-bottom: 1px solid rgb(240, 240, 240);
 
     .operation-span-tag {
         padding: 9px 10px;
@@ -94,6 +93,7 @@ export default {
     .operation-span {
         margin-top: 20px;
         padding: 6px;
+        margin-left: 10px;
         border-radius: 3px;
         user-select: none;
 
@@ -110,7 +110,7 @@ export default {
 
     .user-block {
         position: absolute;
-        right: 50px;
+        right: 35px;
 
         .userName {
             display: inline-block;

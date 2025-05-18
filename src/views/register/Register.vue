@@ -1,8 +1,8 @@
 <template>
-    <div class="login-container">
-        <div class="login-panel">
+    <div class="register-containel">
+        <div class="register-panel">
             <div class="logo">
-                <Logo />
+                <Logo sysName="没账号？立即注册" />
             </div>
             <div class="text">
                 <input v-model="act" class="act" placeholder="注册账号" />
@@ -17,7 +17,7 @@
                 <input v-model="pwdConfirm" class="pwd" type="password" placeholder="输入密码" />
             </div>
             <div>
-                <span class="login-btn" @click="registerFunc">立即登录</span>
+                <span class="register-btn" @click="registerFunc">立即注册</span>
             </div>
             <div class="tip">
                 <p>已有账户？<span class="no-act" @click="toDoLogin">返回登录</span></p>
@@ -48,7 +48,7 @@ export default {
             this.$router.push('/login');
         },
         async registerFunc() {
-            if (!this.act || !this.pwd || !this.pwdConfirm || !this.name ) {
+            if (!this.act || !this.pwd || !this.pwdConfirm || !this.name) {
                 this.$swal.fire({
                     title: '填写校验',
                     text: '账号或密码或用户名不能为空',
@@ -107,9 +107,11 @@ export default {
     user-select: none;
 }
 
-.login-container {
+.register-containel {
+    // background-image: url('/bag.png');
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
+    background-color: rgb(255, 255, 255);
     display: flex;
     /* 启用Flexbox布局 */
     justify-content: center;
@@ -119,12 +121,13 @@ export default {
     flex-direction: column;
     /* 如果需要垂直居中，确保子元素也是这样排列 */
 
-    .login-panel {
+    .register-panel {
         margin: 0 auto;
-        width: 333px;
+        width: 293px;
         height: auto;
         padding: 40px 30px 16px 30px;
-        border-radius: 3px;
+        border-radius: 10px;
+        background-color: rgb(255, 255, 255);
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
 
         .logo {
@@ -134,20 +137,24 @@ export default {
         .act,
         .pwd {
             margin: 8px 0;
-            height: 43px;
-            line-height: 43px;
+            height: 53px;
+            line-height: 53px;
             width: 100%;
             padding: 0 8px;
+            background-color: rgb(248, 248, 248);
             box-sizing: border-box;
-            border: 1px solid #c8d4e7;
-            border-radius: 3px;
+            border: 1px solid rgb(248, 248, 248);
+            border-radius: 5px;
+            font-weight: 800;
+            font-size: 18px;
             padding: 0 15px;
+            margin-top: 13px;
         }
 
         .act:focus,
         .pwd:focus {
             outline: none;
-            border: 1px solid #71a1ea;
+            background-color: rgb(242, 243, 244);
             transition: 1.2s;
         }
 
@@ -159,25 +166,21 @@ export default {
         }
     }
 
-    .login-btn {
+    .register-btn {
         display: inline-block;
         text-align: center;
-        border-radius: 2px;
+        border-radius: 3px;
         margin-top: 20px;
         height: 43px;
         line-height: 43px;
         width: 100%;
-        background-color: rgb(0, 185, 107);
+        background-color: rgb(155, 191, 93);
         font-size: 14px !important;
         border: none;
-        color: white;
+        color: rgb(250, 250, 250);
         padding: 0 !important;
         cursor: pointer;
         user-select: none;
-    }
-
-    .login-btn:hover {
-        background-color: #5782c6;
     }
 
     .tip {

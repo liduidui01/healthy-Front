@@ -1,75 +1,23 @@
 <template>
     <el-row style="background-color: #FFFFFF;padding: 10px 0;border-radius: 5px;">
-        <el-row style="padding: 10px 0 20px;border-bottom: 1px solid #f1f1f1;margin: 0 10px;">
+        <el-row style="padding: 10px;margin: 0 10px;">
             <el-row>
-                <span class="top-bar">评论内容</span>
-                <el-input size="small" style="width: 190px;" v-model="evalustionsQueryDto.content" placeholder="输入处"
-                    clearable @keyup.enter.native="keySearch">
-                </el-input>
-                <span style="display: inline-block;margin-left: 10px;font-size: 14px;color: #909399;">评论时间</span>
-                <el-date-picker size="small" style="margin-left: 10px;width: 220px;" v-model="searchTime"
-                    type="daterange" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间">
+                <el-date-picker size="small" style="width: 220px;" v-model="searchTime" type="daterange"
+                    range-separator="至" start-placeholder="评论开始" end-placeholder="评论结束">
                 </el-date-picker>
-                <el-button size="small" class="customer"
-                    style="margin-left: 10px;background-color: rgb(43, 121, 203);border: none;" type="primary"
-                    @click="handleFilter">立即查询</el-button>
-                <el-button size="small" class="customer reset"
-                    style="background-color: #f1f1f1;border: none;color: #909399;border: 1px solid #f1f1f1;" type="info"
-                    @click="resetQueryCondition">条件重置</el-button>
-                <el-button size="small" class="customer" icon="el-icon-delete"
-                    :style="{ backgroundColor: selectedRows.length ? '#a7535a' : '#F1F1F1', border: 'none', color: selectedRows.length ? '#FFFFFF' : '#909399' }"
-                    type="danger" @click="batchDelete()">批量删除</el-button>
+                <el-input size="small" style="width: 188px;margin-left: 5px;margin-right: 6px;"
+                    v-model="evalustionsQueryDto.content" placeholder="评论内容" clearable @clear="handleFilterClear">
+                    <el-button slot="append" @click="handleFilter" icon="el-icon-search"></el-button>
+                </el-input>
             </el-row>
         </el-row>
-        <el-row style="padding: 10px 0 0 10px;">
-            <span style="margin: 8px 10px;font-size: 12px;">
-                <span>
-                    <i
-                        style="display: inline-block;width: 10px;height: 10px;border-radius: 5px;background-color: #ee3f4d;"></i>
-                    <span style="color: rgb(102, 102, 102);margin-left: 6px;">父级评论</span>
-                </span>
-                <span style="margin-left: 10px;">
-                    <i
-                        style="display: inline-block;width: 10px;height: 10px;border-radius: 5px;background-color: #bec936"></i>
-                    <span style="color: rgb(102, 102, 102);margin-left: 6px;">子级评论</span>
-                </span>
-            </span>
-        </el-row>
-        <el-row style="margin: 10px;">
+        <el-row style="margin: 0 20px;border-top: 1px solid rgb(245,245,245);">
             <el-table row-key="id" @selection-change="handleSelectionChange" :data="tableData" style="width: 100%">
-                <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column prop="parentId" width="100" label="层级">
+                <el-table-column prop="content" label="文本">
                     <template slot-scope="scope">
-                        <span v-if="!scope.row.parentId">
-                            <i
-                                style="display: inline-block;width: 10px;height: 10px;border-radius: 5px;background-color: #ee3f4d;"></i>
-                            父级评论
-                        </span>
-                        <span v-else>
-                            <i
-                                style="display: inline-block;width: 10px;height: 10px;border-radius: 5px;background-color: #bec936"></i>
-                            子级评论
-                        </span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="contentType" width="70" label="挂载源">
-                    <template slot-scope="scope">
-                        <span>{{ scope.row.contentType }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="createTime" width="168" label="评论于">
-                    <template slot-scope="scope">
-                        <span>{{ scope.row.createTime }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="userName" width="150" label="评论者">
-                    <template slot-scope="scope">
-                        <span v-html="highlightKeyword(scope.row.userName)"></span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="replierName" width="150" label="被评论者">
-                    <template slot-scope="scope">
-                        <span v-html="highlightKeyword(scope.row.replierName)"></span>
+                        <el-tooltip class="item" effect="dark" :content="scope.row.content" placement="bottom">
+                            <div class="cell-name">{{ scope.row.content }}</div>
+                        </el-tooltip>
                     </template>
                 </el-table-column>
                 <el-table-column prop="upvoteList" width="60" label="点赞">
@@ -79,12 +27,36 @@
                         <span v-else style="font-size: 16px;font-weight: bolder;">0</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="content" width="218" label="评论内容">
+                <el-table-column prop="contentType" width="100" label="挂载源">
                     <template slot-scope="scope">
-                        <span>{{ scope.row.content }}</span>
+                        <span>{{ scope.row.contentType }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="数据操作">
+                <el-table-column prop="createTime" width="168" label="评论于">
+                    <template slot-scope="scope">
+                        <span>{{ scope.row.createTime }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="userName" width="120" label="评论者">
+                    <template slot-scope="scope">
+                        <span v-html="highlightKeyword(scope.row.userName)"></span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="replierName" width="120" label="被评论">
+                    <template slot-scope="scope">
+                        <span v-html="highlightKeyword(scope.row.replierName)"></span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="parentId" width="120" label="层级">
+                    <template slot-scope="scope">
+                        <i v-if="scope.row.parentId === null" style="margin-right: 5px;" class="el-icon-warning"></i>
+                        <i v-else style="margin-right: 5px;color: rgb(253, 199, 50);" class="el-icon-success"></i>
+                        <span v-if="scope.row.parentId === null"
+                            style="text-decoration: underline;text-decoration-style: dashed;">父级</span>
+                        <span v-else>子级</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="数据操作" width="100px" fixed="right">
                     <template slot-scope="scope">
                         <span class="text-button" @click="handleDelete(scope.row)">删除</span>
                     </template>
@@ -142,7 +114,7 @@ export default {
             filterText: '',
             tableData: [],
             currentPage: 1,
-            pageSize: 20,
+            pageSize: 10,
             totalItems: 0,
             dialogOperaion: false,
             isOperation: false,
