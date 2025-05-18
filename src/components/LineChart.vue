@@ -65,7 +65,8 @@ export default {
       this.chart = echarts.init(this.$refs.chart);
       let option = {
         grid: {
-          left: 30,
+          // 增加 left 值，为纵坐标留出更多空间
+          left: 60, 
           right: 10,
           top: 50,
           borderWidth: 0,
@@ -85,17 +86,19 @@ export default {
           data: this.date,
           axisLine: { show: false },
           axisTick: { show: false },
+          // 修正颜色值的逗号为英文逗号
           axisLabel: {
-            color: 'rgb(51，51，51)',
-            fontSize: '14'
+            color: 'rgb(51, 51, 51)',
+            fontSize: 14
           },
         },
         yAxis: {
           axisLine: { show: false },
           axisTick: { show: false },
+          // 修正颜色值的逗号为英文逗号
           axisLabel: {
-            color: 'rgb(51，51，51)',
-            fontSize: '14'
+            color: 'rgb(51, 51, 51)',
+            fontSize: 14
           },
         },
         series: [{

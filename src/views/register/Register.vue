@@ -1,5 +1,6 @@
 <template>
-    <div class="register-containel">
+    <div class="register-container">
+        <!-- 使用渐变背景 -->
         <div class="register-panel">
             <div class="logo">
                 <Logo sysName="没账号？立即注册" />
@@ -16,7 +17,7 @@
             <div class="text">
                 <input v-model="pwdConfirm" class="pwd" type="password" placeholder="输入密码" />
             </div>
-            <div>
+            <div style="text-align: center;">
                 <span class="register-btn" @click="registerFunc">立即注册</span>
             </div>
             <div class="tip">
@@ -105,110 +106,94 @@ export default {
 <style lang="scss" scoped>
 * {
     user-select: none;
+    box-sizing: border-box;
 }
 
-.register-containel {
-    // background-image: url('/bag.png');
+.register-container {
+    background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
     width: 100%;
     min-height: 100vh;
-    background-color: rgb(255, 255, 255);
     display: flex;
-    /* 启用Flexbox布局 */
     justify-content: center;
-    /* 水平居中 */
     align-items: center;
-    /* 垂直居中 */
-    flex-direction: column;
-    /* 如果需要垂直居中，确保子元素也是这样排列 */
+}
 
-    .register-panel {
-        margin: 0 auto;
-        width: 293px;
-        height: auto;
-        padding: 40px 30px 16px 30px;
-        border-radius: 10px;
-        background-color: rgb(255, 255, 255);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+.register-panel {
+    background: white;
+    padding: 3rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.5s ease-out;
+    width: 380px;
+}
 
-        .logo {
-            margin: 10px 0 30px 0;
-        }
+.logo {
+    text-align: center;
+    margin-bottom: 2rem;
+}
 
-        .act,
-        .pwd {
-            margin: 8px 0;
-            height: 53px;
-            line-height: 53px;
-            width: 100%;
-            padding: 0 8px;
-            background-color: rgb(248, 248, 248);
-            box-sizing: border-box;
-            border: 1px solid rgb(248, 248, 248);
-            border-radius: 5px;
-            font-weight: 800;
-            font-size: 18px;
-            padding: 0 15px;
-            margin-top: 13px;
-        }
+.text {
+    margin-bottom: 1.5rem;
+}
 
-        .act:focus,
-        .pwd:focus {
-            outline: none;
-            background-color: rgb(242, 243, 244);
-            transition: 1.2s;
-        }
+.act,
+.pwd {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
 
-        .role {
-            display: inline-block;
-            color: rgb(30, 102, 147);
-            font-size: 14px;
-            padding-right: 10px;
-        }
+    &:focus {
+        outline: none;
+        border-color: #42a5f5;
     }
+}
 
-    .register-btn {
-        display: inline-block;
-        text-align: center;
-        border-radius: 3px;
-        margin-top: 20px;
-        height: 43px;
-        line-height: 43px;
-        width: 100%;
-        background-color: rgb(155, 191, 93);
-        font-size: 14px !important;
-        border: none;
-        color: rgb(250, 250, 250);
-        padding: 0 !important;
+.register-btn {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background-color: #42a5f5;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: #1976d2;
+    }
+}
+
+.tip {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.9rem;
+
+    .no-act {
+        color: #42a5f5;
+        text-decoration: none;
         cursor: pointer;
-        user-select: none;
-    }
+        transition: color 0.3s ease;
 
-    .tip {
-        margin: 20px 0;
-
-        p {
-            padding: 3px 0;
-            font-size: 14px;
-            margin: 0;
-            color: #647897;
-
-            i {
-                margin-right: 3px;
-            }
-
-            span {
-                color: #3b3c3e;
-                border-radius: 2px;
-                margin: 0 6px;
-            }
-
-            .no-act:hover {
-                color: #568ed7;
-                cursor: pointer;
-            }
-
+        &:hover {
+            color: #1976d2;
         }
     }
+}
 
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 </style>

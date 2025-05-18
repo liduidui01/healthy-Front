@@ -1,5 +1,6 @@
 <template>
     <div class="login-container">
+        <!-- 使用渐变背景 -->
         <div class="login-panel">
             <div class="logo">
                 <Logo :bag="colorLogo" sysName="安馨智享"/>
@@ -69,15 +70,6 @@ export default {
                     return;
                 }
                 setToken(data.data.token);
-                // 使用Swal通知登录成功，延迟后跳转
-                // this.$swal.fire({
-                //     title: '登录成功',
-                //     text: '即将进入系统...',
-                //     icon: 'success',
-                //     showConfirmButton: false,
-                //     timer: DELAY_TIME,
-                // });
-                // 根据角色延迟跳转
                 setTimeout(() => {
                     const { role } = data.data;
                     this.navigateToRole(role);
@@ -107,108 +99,105 @@ export default {
 <style lang="scss" scoped>
 * {
     user-select: none;
+    box-sizing: border-box;
 }
+
 .login-container {
-    // background-image: url('/bag.png');
-    // background-repeat:repeat;
+    // 使用渐变背景
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
     width: 100%;
     min-height: 100vh;
-    background-color: rgb(200, 253, 208);
     display: flex;
-    /* 启用Flexbox布局 */
     justify-content: center;
-    /* 水平居中 */
     align-items: center;
-    /* 垂直居中 */
-    flex-direction: column;
-    /* 如果需要垂直居中，确保子元素也是这样排列 */
 
     .login-panel {
-        width: 263px;
-        height: auto;
-        padding: 40px 30px 16px 30px;
-        border-radius: 10px;
-        background-color: rgb(255,255,255);
-        box-shadow: 0 4px 6px rgba(36, 36, 36, 0.1), 0 1px 3px rgba(40, 40, 40, 0.06);
+        // 增加面板宽度和内边距
+        width: 350px; 
+        padding: 40px;
+        border-radius: 16px;
+        background-color: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        // 添加动画效果
+        animation: fadeIn 0.5s ease-out; 
 
         .logo {
-            margin: 10px 0 30px 0;
+            margin: 0 0 30px 0;
+            text-align: center;
         }
 
         .act,
         .pwd {
-            margin: 8px 0;
-            height: 53px;
-            line-height: 53px;
+            margin: 15px 0;
+            height: 48px;
             width: 100%;
-            padding: 0 8px;
-            background-color: rgb(248,248,248);
-            box-sizing: border-box;
-            border: 1px solid rgb(248,248,248);
-            border-radius: 5px;
-            font-weight: 800;
-            font-size: 18px;
-            padding: 0 15px;
-            margin-top: 13px;
+            padding: 0 16px;
+            background-color: #f5f5f5;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+
+            &:focus {
+                outline: none;
+                border-color: #667eea;
+                background-color: #fff;
+            }
         }
 
-        .act:focus,
-        .pwd:focus {
-            outline: none;
-            background-color: rgb(242,243,244);
-            transition: 1.2s;
+        .login-btn {
+            display: block;
+            text-align: center;
+            border-radius: 8px;
+            margin-top: 30px;
+            height: 48px;
+            line-height: 48px;
+            width: 100%;
+            // 更改按钮颜色
+            background-color: #667eea; 
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+
+            &:hover {
+                background-color: #5a67d8;
+            }
         }
-        
-        .role {
-            display: inline-block;
-            color: rgb(30, 102, 147);
-            font-size: 14px;
-            padding-right: 10px;
+
+        .tip {
+            margin: 20px 0 0 0;
+            text-align: center;
+
+            p {
+                font-size: 14px;
+                color: #6b7280;
+
+                .no-act {
+                    color: #667eea;
+                    text-decoration: none;
+                    transition: color 0.3s ease;
+
+                    &:hover {
+                        color: #5a67d8;
+                    }
+                }
+            }
         }
     }
+}
 
-    .login-btn {
-        display: inline-block;
-        text-align: center;
-        border-radius: 3px;
-        margin-top: 20px;
-        height: 43px;
-        line-height: 43px;
-        width: 100%;
-        background-color: rgb(128, 158, 76);
-        font-size: 14px !important;
-        border: none;
-        color: rgb(250,250,250);
-        padding: 0 !important;
-        cursor: pointer;
-        user-select: none;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
     }
-
-    .tip {
-        margin: 20px 0;
-
-        p {
-            padding: 3px 0;
-            margin: 0;
-            font-size: 14px;
-            color: #647897;
-
-            i{
-                margin-right: 3px;
-            }
-
-            span {
-                color: #3b3c3e;
-                border-radius: 2px;
-                margin: 0 6px;
-            }
-            .no-act:hover{
-                color: #3e77c2;
-                cursor: pointer;
-            }
-
-        }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
-
 }
 </style>
