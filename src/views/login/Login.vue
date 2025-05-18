@@ -2,7 +2,7 @@
     <div class="login-container">
         <div class="login-panel">
             <div class="logo">
-                <Logo :bag="colorLogo" sysName="健康有道"/>
+                <Logo :bag="colorLogo" sysName="安馨智享"/>
             </div>
             <div class="text">
                 <input v-model="act" class="act" placeholder="账号" />
@@ -113,7 +113,7 @@ export default {
     // background-repeat:repeat;
     width: 100%;
     min-height: 100vh;
-    background-color: rgb(255,255,255);
+    background-color: rgb(200, 253, 208);
     display: flex;
     /* 启用Flexbox布局 */
     justify-content: center;
