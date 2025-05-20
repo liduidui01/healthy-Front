@@ -7,6 +7,16 @@
                 </el-col>
                 <el-col :span="18">
                     <span style="float: right;display: flex; align-items: center; flex-wrap: wrap;">
+                        <el-button 
+                            @click="goBack"
+                            type="primary"
+                            plain
+                            size="small"
+                            style="margin-right: 20px; border-radius: 20px; padding: 8px 20px; transition: all 0.3s ease;"
+                            class="back-button">
+                            <i class="el-icon-back" style="margin-right: 5px;"></i>
+                            返回主页
+                        </el-button>
                         <img style="width: 30px;height: 30px;border-radius: 15px;" :src="userInfo.userAvatar" />
                         <span style="margin-left: 8px;">{{ userInfo.userName }}</span>
                     </span>
@@ -98,6 +108,23 @@ export default {
         this.loadAllMessageType();
     },
     methods: {
+        // 返回主界面
+        goBack() {
+            // 检查用户信息是否存在
+            const userInfo = sessionStorage.getItem('userInfo');
+            if (!userInfo) {
+                this.$router.push('/login');
+                return;
+            }
+            // 检查token是否存在
+            const token = localStorage.getItem('token');
+            if (!token) {
+                this.$router.push('/login');
+                return;
+            }
+            // 返回主界面
+            this.$router.push('/news-record');
+        },
         commentDeal(content) {
             return content.split(';');
         },
@@ -262,5 +289,12 @@ export default {
     display: inline-block;
     margin: 5px 0;
     font-size: 22px;
+}
+
+.back-button {
+    &:hover {
+        transform: translateX(-3px);
+        box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+    }
 }
 </style>
