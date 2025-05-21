@@ -100,6 +100,7 @@ const routes = [
     meta: {
       requireAuth: true,
     },
+    redirect: '/news-record',
     children: [
       {
         name: '资讯首页',

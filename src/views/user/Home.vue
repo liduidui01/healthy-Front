@@ -1,13 +1,18 @@
 <template>
     <div>
+        <div class="section-title">
+            <i class="el-icon-star-on"></i>
+            <span>本周推荐</span>
+            <div class="title-line"></div>
+        </div>
         <el-row>
             <el-col :span="6">
-                <Banner :data="newsTopList" @on-click="onBannerClick" />
+              <!--  <Banner :data="newsTopList" @on-click="onBannerClick" /> -->
             </el-col>
-            <el-col :span="18">
-                <el-col @click.native="newsItemClick(news)" :span="6" :key="index" v-for="(news, index) in newsTopList">
+            <el-col :span="40">
+                <el-col @click.native="newsItemClick(news)" :span="4" :key="index" v-for="(news, index) in newsTopList">
                     <div style="padding: 0 15px;">
-                        <img :src="news.cover" :alt="news.name" style="width: 100%;min-height: 128px;max-height: 158px;border-radius: 10px;">
+                        <img :src="news.cover" :alt="news.name" style="width: 100%;border-radius: 10px;">
                         <h2 class="news-title">{{ news.name }}</h2>
                         <div style="font-size: 12px;">
                             <span class="news-tags">所属类别：{{ news.tagName }}</span>
@@ -111,6 +116,42 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.section-title {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    padding: 0 20px;
+    
+    i {
+        color: #37cd78;
+        font-size: 24px;
+        margin-right: 10px;
+        animation: rotate 3s linear infinite;
+    }
+    
+    span {
+        font-size: 20px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-right: 15px;
+    }
+    
+    .title-line {
+        flex: 1;
+        height: 2px;
+        background: linear-gradient(to right, #40c79a, transparent);
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .news-tags {
     display: inline-block;
     padding: 2px 5px;

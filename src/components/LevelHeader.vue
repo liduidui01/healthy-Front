@@ -20,6 +20,7 @@
                 </span>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item icon="el-icon-user-solid" @click.native="userCenterPanel">个人资料</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-warning-outline" @click.native="resetPwd">修改密码</el-dropdown-item>
                     <el-dropdown-item icon="el-icon-s-fold" @click.native="loginOut">退出登录</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
@@ -54,6 +55,10 @@ export default {
         // 个人中心，传回父组件处理
         userCenterPanel() {
             this.$emit('eventListener', 'center');
+        },
+        // 重置密码，传回父组件处理
+        resetPwd() {
+            this.$emit('eventListener', 'resetPwd');
         },
         // 退出登录，传回父组件处理
         loginOut() {

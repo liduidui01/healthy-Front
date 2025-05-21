@@ -61,7 +61,7 @@ export default {
             messagePath: '/message',
             loginPath: '/login',
             sysName: '安馨智享',
-            defaultPath: '/news-record',
+            //defaultPath: '/news-record',
             filterText: '',
             noReadMsg: 0,
         }
@@ -79,7 +79,7 @@ export default {
         }
     },
     mounted() {
-        this.pathToDo(this.defaultPath);
+        //this.pathToDo(this.defaultPath);
         this.loadMsgCount();
     },
     methods: {

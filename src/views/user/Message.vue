@@ -118,6 +118,7 @@ export default {
             }
             // 检查token是否存在
             const token = localStorage.getItem('token');
+            console.log(token)
             if (!token) {
                 this.$router.push('/login');
                 return;

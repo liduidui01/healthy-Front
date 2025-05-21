@@ -53,6 +53,38 @@
                     @click="updateUserInfo">修改</el-button>
             </span>
         </el-dialog>
+        <!-- 重置密码 -->
+        <el-dialog :show-close="false" :visible.sync="dialogRetPwdOperaion" width="26%">
+            <div slot="title" style="padding: 25px 0 0 20px;">
+                <span style="font-size: 18px;font-weight: 800;">重置密码</span>
+            </div>
+            <el-row style="padding: 10px 20px 20px 20px;">
+                <el-row>
+                    <p style="font-size: 12px;padding: 3px 0;margin-bottom: 10px;">
+                        <span class="modelName">*原始密码</span>
+                    </p>
+                    <input class="input-title" type="password" v-model="pwdEntity.oldPwd" placeholder="原始密码">
+                </el-row>
+                <el-row>
+                    <p style="font-size: 12px;padding: 3px 0;margin-bottom: 10px;">
+                        <span class="modelName">*新密码</span>
+                    </p>
+                    <input class="input-title" type="password" v-model="pwdEntity.newPwd" placeholder="新密码">
+                </el-row>
+                <el-row>
+                    <p style="font-size: 12px;padding: 3px 0;margin-bottom: 10px;">
+                        <span class="modelName">*确认密码</span>
+                    </p>
+                    <input class="input-title" type="password" v-model="pwdEntity.againPwd" placeholder="确认密码">
+                </el-row>
+            </el-row>
+            <span slot="footer" class="dialog-footer">
+                <el-button class="customer" size="small" style="background-color: rgb(241, 241, 241);border: none;"
+                    @click="dialogRetPwdOperaion = false">取 消</el-button>
+                <el-button size="small" style="background-color: #15559a;border: none;" class="customer" type="info"
+                    @click="updateUserPwd">修改</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -80,12 +112,14 @@ export default {
                 role: null,
                 email: ''
             },
+            pwdEntity: { oldPwd: '', newPwd: '', againPwd: '' },
             flag: false,
             tag: '可视化',
             bag: 'rgb(246,246,246)',
             colorLogo: 'rgb(51,51,51)',
             bagMenu: 'rgb(248,248,248)',
-            dialogOperaion: false
+            dialogOperaion: false,
+            dialogRetPwdOperaion: false
         };
     },
     created() {
@@ -144,6 +178,10 @@ export default {
             // 退出登录
             if (event === 'loginOut') {
                 this.loginOut();
+            }
+            // 重置密码
+            if (event === 'resetPwd') {
+                this.dialogRetPwdOperaion = true;
             }
         },
         async loginOut() {
@@ -204,6 +242,45 @@ export default {
             } catch (error) {
                 console.error('获取用户认证信息时发生错误:', error);
                 this.$message.error('认证信息加载失败,请重试！');
+            }
+        },
+        async updateUserPwd() {
+            try {
+                const { oldPwd, newPwd, againPwd } = this.pwdEntity;
+                if (!oldPwd || !newPwd || !againPwd) {
+                    this.$message(`任意项不为空`);
+                    return;
+                }
+                if (newPwd !== againPwd) {
+                    this.$message(`前后密码输入不一致`);
+                    return;
+                }
+                const pwdDTO = {
+                    oldPwd: this.$md5(this.$md5(oldPwd)),
+                    newPwd: this.$md5(this.$md5(newPwd))
+                }
+                const resposne = await this.$axios.put(`/user/updatePwd`, pwdDTO);
+                const { data } = resposne;
+                if (data.code === 200) {
+                    this.dialogRetPwdOperaion = false;
+                    this.$swal.fire({
+                        title: '修改密码',
+                        text: data.msg,
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 1000,
+                    });
+                    setTimeout(() => {
+                        clearToken();
+                        this.$router.push(`/login`);
+                    }, 1200)
+                } else {
+                    this.$message.error(data.msg);
+                }
+            } catch (e) {
+                this.dialogRetPwdOperaion = false;
+                this.$error(data.msg);
+                console.error(`修改密码异常:${e}`);
             }
         },
     }

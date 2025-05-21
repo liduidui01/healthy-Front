@@ -1,7 +1,8 @@
 <template>
     <div style="position: relative;">
         <img :src="activeData.cover" style="min-height: 218px;max-height: 308px;"
-            :style="{ width: width, borderRadius: borderRadius }" />
+            :style="{ width: width, borderRadius: borderRadius }" 
+            @click="onImageClick" />
         <h3 class="tip-name" style="position: absolute;bottom: 0;">
             <div @click="onClick" style="font-size: 12px;">{{ activeData.name }}</div>
             <div class="point-container">
@@ -9,7 +10,9 @@
                     backgroundColor: index === indexPoint ? 'rgb(254, 244, 203)' : '',
                     height: index === indexPoint ? '15px' : '10px',
                     width: index === indexPoint ? '30px' : '20px'
-                }" v-for="(point, indexPoint) in data" :key="index">
+                }" v-for="(point, indexPoint) in data" 
+                    :key="indexPoint"
+                    @click="onPointClick(indexPoint)">
                 </span>
             </div>
         </h3>
@@ -58,12 +61,37 @@ export default {
         onClick(data) {
             this.$emit('on-click', this.activeData);
         },
+        onImageClick() {
+            this.$emit('on-image-click', this.activeData);
+        },
+        onPointClick(index) {
+            this.index = index;
+            this.activeData = this.data[index];
+            // 重置定时器
+            if (this.timer) clearInterval(this.timer);
+            this.config();
+        },
         config() {
-            setInterval(() => {
-                this.index = (this.index >= this.data.length) ? 0 : this.index;
-                this.activeData = this.data[this.index++];
+            // 修改：添加清除定时器逻辑，避免多个定时器同时运行
+            if (this.timer) clearInterval(this.timer);
+            
+            this.timer = setInterval(() => {
+                // 修改：修正索引计算逻辑
+                this.index = (this.index + 1) % this.data.length;
+                this.activeData = this.data[this.index];
             }, this.time);
         },
+        handleClick(data) {
+            // 处理标题点击事件
+        },
+        handleImageClick(data) {
+            // 处理图片点击事件，例如跳转到对应页面
+            // 可以使用 data 中的信息进行跳转
+        }
+    },
+    // 添加：组件销毁时清除定时器
+    beforeDestroy() {
+        if (this.timer) clearInterval(this.timer);
     }
 };
 </script>
@@ -94,6 +122,7 @@ export default {
         height: 10px;
         background-color: rgb(245, 245, 245);
         border-radius: 5px;
+        transition: all 0.3s; // 添加过渡动画
     }
 
     span:hover {
